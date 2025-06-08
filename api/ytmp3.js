@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   // 🟢 1. Try Primary API (David Cyril)
   try {
-    const primaryRes = await fetch(`https://apis.davidcyriltech.my.id/youtube/mp3?url=${encodeURIComponent(url)}`);
+    const primaryRes = await fetch(`https://aapis.davidcyriltech.my.id/youtube/mp3?url=${encodeURIComponent(url)}`);
     const primary = await primaryRes.json();
 
     if (primary.success && primary.result) {
