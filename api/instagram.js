@@ -5,7 +5,6 @@ export default async function handler(req, res) {
     return res.status(400).json({
       success: false,
       status: 400,
-      message: "Missing Instagram URL parameter!",
       creator: "MR RABBIT"
     });
   }
@@ -15,15 +14,16 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (data.success) {
-      // ব্র্যান্ডেড creator নাম সেট করুন
       data.creator = "MR RABBIT";
+
+      // message ফিল্ড বাদ দিতে চাইলে delete করতে পারেন যদি থাকে
+      if (data.message) delete data.message;
 
       return res.status(200).json(data);
     } else {
       return res.status(500).json({
         success: false,
         status: 500,
-        message: "Failed to fetch video from David Cyril API.",
         creator: "MR RABBIT"
       });
     }
@@ -32,7 +32,6 @@ export default async function handler(req, res) {
     return res.status(500).json({
       success: false,
       status: 500,
-      message: "Internal Server Error",
       creator: "MR RABBIT"
     });
   }
