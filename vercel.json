@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/pinterest", "dest": "/api/pinterest.js" },
+    { "src": "/api/shorten", "dest": "/api/shorten.js" }
+  ]
+}
