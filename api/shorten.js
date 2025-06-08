@@ -1,8 +1,13 @@
-import fetch from "node-fetch";
-
 export default async function handler(req, res) {
   const { url } = req.query;
-  if (!url) return res.status(400).json({ error: "URL দিতে হবে" });
+
+  if (!url) {
+    return res.status(400).json({
+      creator: "MR RABBIT",
+      success: false,
+      error: "Please provide a URL to shorten"
+    });
+  }
 
   const api = `https://apis.davidcyriltech.my.id/tinyurl?url=${encodeURIComponent(url)}`;
 
@@ -10,17 +15,28 @@ export default async function handler(req, res) {
     const response = await fetch(api);
     const data = await response.json();
 
-    if (data.success) {
-      res.status(200).json({
+    if (!data.success) {
+      return res.status(500).json({
         creator: "MR RABBIT",
-        success: true,
-        original_url: url,
-        shortened_url: data.shortened_url,
+        success: false,
+        error: "Failed to shorten the URL"
       });
-    } else {
-      res.status(500).json({ error: "Shortening failed" });
     }
-  } catch (err) {
-    res.status(500).json({ error: "API error" });
+
+    const result = {
+      creator: "MR RABBIT",
+      success: true,
+      original_url: data.original_url,
+      shortened_url: data.shortened_url
+    };
+
+    res.setHeader("Content-Type", "application/json");
+    return res.status(200).send(JSON.stringify(result, null, 2)); // Pretty response
+  } catch (error) {
+    return res.status(500).json({
+      creator: "MR RABBIT",
+      success: false,
+      error: "Something went wrong"
+    });
   }
 }
