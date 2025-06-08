@@ -1,53 +1,40 @@
-import fetch from 'node-fetch';
-
 export default async function handler(req, res) {
   const { url } = req.query;
-  if (!url) {
-    return res.status(400).json({ error: 'Instagram ভিডিওর URL দিতে হবে।' });
-  }
+  if (!url) return res.status(400).json({ error: "Instagram URL প্রয়োজন" });
 
-  const primaryApi = `https://apis.davidcyriltech.my.id/instagram?url=${encodeURIComponent(url)}`;
-  const fallbackApi = `https://bk9.fun/download/instagram?url=${encodeURIComponent(url)}`;
+  const primary = `https://apis.davidcyriltech.my.id/instagram?url=${encodeURIComponent(url)}`;
+  const fallback = `https://bk9.fun/download/instagram?url=${encodeURIComponent(url)}`;
 
   try {
-    const primaryRes = await fetch(primaryApi);
-    const primaryData = await primaryRes.json();
-
-    if (primaryData.status === 200 || primaryData.success === true) {
-      // David Cyril এর ফরম্যাট 그대로 রিটার্ন করো
+    const r1 = await fetch(primary);
+    const d1 = await r1.json();
+    if (d1.success || d1.status === 200) {
       return res.status(200).json({
-        creator: "YourName",  // এখানে তোমার নাম লিখবে
+        creator: "Your Name",
         status: 200,
         success: true,
-        result: primaryData.result || primaryData,
+        type: d1.type || "mp4",
+        downloadUrl: d1.downloadUrl || d1.result?.url || d1.url
       });
     }
-
-    throw new Error('Primary API failed');
-  } catch (e) {
+    throw new Error("Primary failed");
+  } catch {
     try {
-      const fallbackRes = await fetch(fallbackApi);
-      const fallbackData = await fallbackRes.json();
-
-      if (fallbackData.status === true) {
-        // BK9 এর ফরম্যাটকে David Cyril এর ফরম্যাটে রূপান্তর
+      const r2 = await fetch(fallback);
+      const d2 = await r2.json();
+      if (d2.status && d2.BK9?.[0]?.url) {
         return res.status(200).json({
-          creator: "YourName", // তোমার নাম
+          creator: "Your Name",
           status: 200,
           success: true,
-          result: {
-            type: fallbackData.BK9[0]?.type || "video",
-            quality: "unknown",
-            title: fallbackData.BK9[0]?.title || "Instagram Video",
-            thumbnail: fallbackData.BK9[0]?.image || null,
-            download_url: fallbackData.BK9[0]?.url || fallbackData.BK9[0]?.downloadUrl || null,
-          },
+          type: d2.BK9[0].type || "unknown",
+          downloadUrl: d2.BK9[0].url
         });
       }
     } catch {
-      return res.status(500).json({ error: 'দুটি API ব্যর্থ হয়েছে।' });
+      return res.status(500).json({ error: "দুই API-ই ব্যর্থ হয়েছে" });
     }
   }
 
-  return res.status(500).json({ error: 'কোন ফলাফল পাওয়া যায়নি।' });
+  return res.status(500).json({ error: "ফলাফল পাওয়া যায়নি" });
 }
