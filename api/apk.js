@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.json({
+    return res.status(200).json({
       creator: "MR RABBIT",
       status: "success",
       app: {
