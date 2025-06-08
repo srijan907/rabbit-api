@@ -1,5 +1,5 @@
 {
-  "name": "instagram-downloader-api",
+  "name": "my-instagram-api",
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
@@ -7,7 +7,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "13.4.7",
+    "next": "13.4.12",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "node-fetch": "^3.3.1"
