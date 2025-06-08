@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   // 🟢 1. Try Primary API (David Cyril)
   try {
-    const primaryRes = await fetch(`https://aapis.davidcyriltech.my.id/youtube/mp3?url=${encodeURIComponent(url)}`);
+    const primaryRes = await fetch(`https://apis.davidcyriltech.my.id/youtube/mp3?url=${encodeURIComponent(url)}`);
     const primary = await primaryRes.json();
 
     if (primary.success && primary.result) {
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
   // 🔁 2. Try Fallback API (BK9)
   try {
-    const fallbackRes = await fetch(`https://bbk9.fun/download/ytmp3?url=${encodeURIComponent(url)}&type=mp3`);
+    const fallbackRes = await fetch(`https://bk9.fun/download/ytmp3?url=${encodeURIComponent(url)}&type=mp3`);
     const fallback = await fallbackRes.json();
 
     if (fallback.status && fallback.BK9) {
