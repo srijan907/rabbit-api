@@ -9,12 +9,15 @@ export default async function handler(req, res) {
     });
   }
 
+  let primarySuccess = false;
+
+  // 🟢 1. Try Primary API (David Cyril)
   try {
-    // ✅ 1. Try Primary (David Cyril)
-    const primaryRes = await fetch(`https://appis.davidcyriltech.my.id/youtube/mp3?url=${encodeURIComponent(url)}`);
+    const primaryRes = await fetch(`https://apis.davidcyriltech.my.id/youtube/mp3?url=${encodeURIComponent(url)}`);
     const primary = await primaryRes.json();
 
     if (primary.success && primary.result) {
+      primarySuccess = true;
       return res.status(200).json({
         creator: "MR RABBIT",
         status: "success",
@@ -25,8 +28,13 @@ export default async function handler(req, res) {
         }
       });
     }
+  } catch (e) {
+    // Logging (optional)
+    console.warn("Primary API failed:", e.message);
+  }
 
-    // 🔁 2. Fallback: BK9.fun API (if primary fails)
+  // 🔁 2. Try Fallback API (BK9)
+  try {
     const fallbackRes = await fetch(`https://bk9.fun/download/ytmp3?url=${encodeURIComponent(url)}&type=mp3`);
     const fallback = await fallbackRes.json();
 
@@ -41,19 +49,14 @@ export default async function handler(req, res) {
         }
       });
     }
-
-    // ❌ If both fail
-    return res.status(500).json({
-      creator: "MR RABBIT",
-      status: "error",
-      message: "All sources failed"
-    });
-
-  } catch (err) {
-    return res.status(500).json({
-      creator: "MR RABBIT",
-      status: "error",
-      message: "Internal server error"
-    });
+  } catch (e) {
+    console.warn("Fallback API failed:", e.message);
   }
+
+  // ❌ 3. If both fail
+  return res.status(500).json({
+    creator: "MR RABBIT",
+    status: "error",
+    message: "All sources failed"
+  });
 }
