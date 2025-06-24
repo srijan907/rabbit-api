@@ -1,24 +1,23 @@
 import express from 'express';
 import fetch from 'node-fetch';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.get('/', (req, res) => {
-  res.send('🔞 MrRabbit NSFW API Working!');
+  res.send('🔞 MrRabbit NSFW API is Running!');
 });
 
-// Main API route
 app.get('/api/2xnxx.js', async (req, res) => {
   const query = req.query.query;
-  if (!query) return res.status(400).json({ error: 'Missing query parameter' });
+  if (!query) return res.status(400).json({ error: 'Missing ?query= parameter' });
 
   try {
     const data = await xnxxSearch(query);
     res.json(data);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch', detail: err.message });
+    res.status(500).json({ error: 'Fetch failed', detail: err.message });
   }
 });
 
@@ -49,5 +48,5 @@ async function xnxxSearch(query) {
 }
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server is live at http://localhost:${PORT}`);
 });
