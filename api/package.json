@@ -1,0 +1,15 @@
+{
+  "name": "mr-rabbit-api",
+  "version": "1.0.0",
+  "description": "XNXX Search API",
+  "main": "2xnxx.js",
+  "type": "module",
+  "scripts": {
+    "start": "node 2xnxx.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2"
+  }
+}
