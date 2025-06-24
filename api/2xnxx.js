@@ -32,10 +32,10 @@ async function xnxxSearch(query) {
         const $ = cheerio.load(html);
         const results = [];
 
-        $('div.mozaique > div').each((i, el) => {
+        $('div.mozaique > div.video').each((i, el) => {
           const link = baseUrl + ($(el).find('a').attr('href') || '');
           const title = $(el).find('a').attr('title');
-          const info = $(el).find('p.metadata').text();
+          const info = $(el).find('p.metadata').text().trim();
           if (title && link.includes('/video')) {
             results.push({ title, info, link });
           }
